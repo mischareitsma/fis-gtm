@@ -1,50 +1,36 @@
 #!/bin/bash
 
-# GT.M installation variables
-export version="V63004"
+echo "Running ${0}"
+
+echo "Setting variables for installation of GT.M"
+
 export platform="linux_x8664"
 export build_type="pro"
+export version="V63004"
 
-export gtm_user="gtm"
-export gtm_group="gtm"
+export gtm_user="vagrant"
+export gtm_group="vagrant"
 
-export package=gtm_${version}_${platform}_${build_type}.tar.gz
-export distribution=/vagrant/${package}
-export install_dir=/opt/fis-gtm/
+export install_dir=/opt/fis-gtm
 
-# Create gtm user
+echo "Platform: ${platform}"
+echo "Build type: ${build_type}"
+echo "GT.M version: ${version}"
 
-groupadd ${gtm_group}
-useradd -c "GT.M User" -g ${gtm_group} -m ${gtm_user}
-passwd -d ${gtm_user}
+echo "GT.M user: ${gtm_user}"
+echo "GT.M group: ${gtm_group}"
 
-# Install prerequisites
+echo "Installation dir: ${install_dir}"
 
-yum install -y gdb git libicu-devel strace wget
+echo "Installing prerequisites and additional packages"
+yum install -y git libicu-devel strace wget
 
 # Fetch ICU version and pass in --utf8 flag for the install script
+sudo /vagrant/gtminstall --group ${gtm_group} --installdir ${install_dir} \
+                  --noprompt-for-sys-cfg --prompt-for-group \
+                  --user ${gtm_user} --utf8 default --verbose ${version}
 
-#TODO: Test with default ICU
-export icu_version=$(icuinfo -v | grep "name=\"version\"" | awk -F'>' '{print $2}' | awk -F'<' '{print $1}')
-
-echo "Installing GT.M: ${version}, ${platform}, ${build_type}"
-
-temp_dir=$(mktemp -d)
-cp ${distribution} ${temp_dir}
-cd ${temp_dir}
-tar -xzvf ${package}
-sudo ./gtminstall \
-    --distrib $(pwd) \
-	--group ${gtm_group} \
-	--installdir ${install_dir} \
-	--noprompt-for-sys-cfg \
-    --prompt-for-group \
-	--user ${gtm_user} \
-	--utf8 ${icu_version} \
-	--verbose \
-    ${version}
-
-cd -
-rm -rf ${temp_dir}
-
-cp motd /etc/motd
+echo "Finalizing environment configuration"
+cp /vagrant/motd /etc/motd
+echo "LC_ALL=en_US.utf-8" >> /etc/locale.conf
+echo "source ${install_dir}/gtmprofile" >> /home/vagrant/.bashrc

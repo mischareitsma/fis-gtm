@@ -1,5 +1,5 @@
 # Vagrant stuff
-/.vagrant
+**/.vagrant
 
 # IDE stuff
 .idea/*
