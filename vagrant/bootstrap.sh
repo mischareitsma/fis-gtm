@@ -6,7 +6,7 @@ echo "Setting variables for installation of GT.M"
 
 export platform="linux_x8664"
 export build_type="pro"
-export version="V63004"
+export version="V6.3-004"
 
 export gtm_user="vagrant"
 export gtm_group="vagrant"
