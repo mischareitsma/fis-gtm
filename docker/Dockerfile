@@ -1,22 +1,11 @@
-FROM registry-all.docker.ing.net/rhel7
+FROM centos:7
 
-LABEL maintainer.name="Mischa Reitsma"
-LABEL maintainer.email="Mischa.Reitsma@ing.nl"
+ADD gtminstall /tmp/
 
-# Install prerequisites
-RUN yum install -y \
-    at \
-    gdb \
-    git \
-    gpgme-devel \
-    ksh \
-    libgcrypt-devel \
-    libicu-devel \
-    ncurses-term \
-    openssl* \
-    strace \
-    sysstat
-RUN yum clean
+RUN yum install -y libicu-devel wget which  && yum clean all
 
-# Add the Profile user
-RUN groupadd profile && useradd -g profile -m -d /home/profile -s /usr/bin/ksh
+RUN groupadd gtm && useradd -g gtm gtm
+
+RUN /tmp/gtminstall --group gtm --user gtm --installdir /opt/fis-gtm \
+                    --noprompt-for-sys-cfg --prompt-for-group --utf8 default \
+                    --verbose V6.3-004
