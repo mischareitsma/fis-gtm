@@ -9,3 +9,7 @@ RUN groupadd gtm && useradd -g gtm gtm
 RUN /tmp/gtminstall --group gtm --user gtm --installdir /opt/fis-gtm \
                     --noprompt-for-sys-cfg --prompt-for-group --utf8 default \
                     --verbose V6.3-004
+
+USER gtm
+
+ENTRYPOINT source /opt/fis-gtm/gtmprofile && /bin/bash
