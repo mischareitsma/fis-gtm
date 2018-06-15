@@ -2,7 +2,7 @@ FROM alpine:latest
 
 ADD gtminstall /tmp/
 
-RUN apk update && apk add wget which
+RUN apk --update add icu-libs wget which
 
 RUN addgroup gtm && adduser -h /home/gtm -G gtm -D gtm
 

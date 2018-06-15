@@ -1,8 +1,12 @@
 FROM centos:7
 
+LABEL maintainer.name="Mischa Reitsma"
+LABEL maintainer.email="reitsma.mischa@gmail.com"
+LABEL version="1.0.0"
+
 ADD gtminstall /tmp/
 
-RUN yum install -y libicu-devel wget which  && yum clean all
+RUN yum install -y libicu-devel wget which && yum clean all
 
 RUN groupadd gtm && useradd -g gtm gtm
 

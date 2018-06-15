@@ -25,7 +25,6 @@ echo "Installation dir: ${install_dir}"
 echo "Installing prerequisites and additional packages"
 yum install -y git libicu-devel strace wget
 
-# Fetch ICU version and pass in --utf8 flag for the install script
 sudo /vagrant/gtminstall --group ${gtm_group} --installdir ${install_dir} \
                   --noprompt-for-sys-cfg --prompt-for-group \
                   --user ${gtm_user} --utf8 default --verbose ${version}
