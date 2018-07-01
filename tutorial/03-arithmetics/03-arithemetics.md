@@ -11,26 +11,6 @@ Operator | Description      | Example         | Result
 `\`      | Integer devision | `WRITE 25\2`    | 12
 `**`     | Exponent         | `WRITE 2**10`   | 1024
 
-## Operator Precedence
-
-The operations in mumps are executed from left to right, and therefore, there
-is not operator precedence.
-
-For example, the expected result of the equation `2 + 5 * 6` is `32`. In mumps
-the answer is:
-
-```text
-GTM>WRITE 2+5*6
-42
-```
-
-Brackets can be used to ensure that the multiplication is executed first:
-
-```text
-GTM>WRITE 2+(5*6)
-32
-```
-
 ## Unary Operators
 
 There are three unary operators that work on numbers:
@@ -89,3 +69,41 @@ GTM>SET B="WORLD"
 GTM>WRITE A_" "_B
 HELLO WORLD
 ```
+
+## Operator Precedence
+
+The operations in mumps are executed from left to right, and therefore, there
+is not operator precedence.
+
+For example, the expected result of the equation `2 + 5 * 6` is `32`. In mumps
+the answer is:
+
+```text
+GTM>WRITE 2+5*6
+42
+```
+
+Brackets can be used to ensure that the multiplication is executed first:
+
+```text
+GTM>WRITE 2+(5*6)
+32
+```
+
+The rule for operator precedence also holds for the unary operators. The
+of the following boolean expression might be confusing:
+
+```text
+GTM>WRITE '5=3
+0
+GTM>WRITE 5'=3
+1
+GTM>WRITE '(5=3)
+1
+```
+
+The first expression might be unexpected, however, first the negation works on
+the number 5, which returns 0, and after that, 0 is compared to 3, which
+returns false (0). Whereas one might read the expression as 5 not equals
+3, which should result in a true (1) Either moving the negation to the equal
+sign, or using brackets will result in the expected behaviour.
