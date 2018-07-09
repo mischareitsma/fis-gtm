@@ -1,7 +1,14 @@
 # FIS GT.M
 
-For more information on FIS GT.M, check:
-https://www.fisglobal.com/solutions/Banking%20and%20Wealth/Services/Database%20Engine
+GT.M, an abreviation for Greenwitch Technology M, is a key-value database
+optimized for high performance transaction processing. The data structure
+follows the schema-less tree structure.
+
+Additionally, GT.M is a development platform and compiler for Mumps.
+
+For more information on FIS GT.M, check the 
+[Wikipedia](https://en.wikipedia.org/wiki/GT.M) entry or at
+[FIS](https://www.fisglobal.com/solutions/Banking%20and%20Wealth/Services/Database%20Engine).
 
 
 ## Running GT.M
