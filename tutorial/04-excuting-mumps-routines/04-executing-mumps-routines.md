@@ -12,27 +12,53 @@ can be executed multiple times, call other routines, and return values.
 To create a routine, write mumps commands to a flat file, with the `.m`
 extension.
 
-In order to run a mumps routine, the command is `mumps -run <routine-name>`,
-or in shorter notation `mumps -r <routine-name>`. The routine name matches
-the file name, e.g. `mumps -r mytest` will run `mytest.m`.
+When executing the routine for the first time, GT.M will compile the mumps
+routine into an object file. At subsequent executions of the same routine,
+GT.M will use the object file, and not the source file.
 
-GT.M uses the `gtmroutines` environment variable to know which routine to
-execute. The `gtmroutines` variable is a list of directory locations where GT.M
-should look for the routine.
+The command `mumps -run <routine-name>`, or in short notation
+`mumps -r <routine-name>` executes a mumps routine. The routine name matches
+the file name, e.g. `mumps -r mytest` will run the mumps code in `mytest.m`.
+
+GT.M uses the `gtmroutines` environment variable to search for routines or
+objects to execute. The `gtmroutines` variable is a list of directory locations
+where GT.M should look for the source routines or the compiled object files.
 
 ```text
 [gtm@ef0cc0e9ae83 /]$ echo ${gtmroutines}
 /home/gtm/.fis-gtm/V6.3-004_x86_64/o*(/home/gtm/.fis-gtm/V6.3-004_x86_64/r /home/gtm/.fis-gtm/r) /opt/fis-gtm/plugin/o(/opt/fis-gtm/plugin/r) /opt/fis-gtm
 ```
 
-This variable is used by GT.M to search for routines in the following order:
+The conent of the `gtmroutines` variable is stored in the intrisic GT.M
+variable `$ZROUTINES`.
 
-1. `/home/gtm/.fis-gtm/V6.3-004_x84_64/r`
-1. `/home/gtm/.fis-gtm/r`
-1. `/opt/fis-gtm/plugin/r`
+This variable has a space-seperated list of directories, where there are
+two possible ways of defining the location where GT.M looks:
 
-The directory in front of the list of the routine directories, is the directory
-where the object files (compiled mumps files) are stored.
+1. Different routine and object directories: To store object files in a
+   different location than the mumps routines, the syntax is
+   `/dir/to/object/files(/list/of/dirs /to/mumps/routines)`. In this example,
+   the director `/dir/to/object/files` stores the object files of routines that
+   are located in either `/list/of/dirs` or `/to/mumps/routines`.
+1. Object and routine files in the same location: `/dir/with/both/files`. In
+   this example, the object file of the routine `/dir/with/both/files/test.m`
+   can be found at `/dir/with/both/files/test.o`.
+
+The order matters for `$ZROUTINES`. When executing a routine with the
+`mumps -run` command, for example `test`, the following order is used by GT.M:
+
+1. Check for `test.o` in directories that start with 
+   `/home/gtm/.fis-gtm/V6.3-004_x86_64/o` (note the wild card `*` in
+   `gtmroutines`)
+   1. Check for `test.m` in `/home/gtm/.fis-gtm/V6.3-004_x84_64/r`
+   1. Check for `test.m` in `/home/gtm/.fis-gtm/r`
+1. Check for `test.o` in `/opt/fis-gtm/plugin/o`
+   1. Check for `test.m` in `/opt/fis-gtm/plugin/r`
+1. Check for `test.o` in `/opt/fis-gtm`
+1. Check for `test.m` in `/opt/fis-gtm`
+
+The `/opt/fis-gtm` directory is the GT.M installation directory, and contains
+a lot of GT.M utilities, the so-called `%` routines.
 
 ## Mumps Routines
 
@@ -140,14 +166,21 @@ WRITESOMETHING
     QUIT
 ```
 
-The routine will start by calling the `WRITEHELLO` label. In this label, the
-world `HELLO` is written to the console. The next line start the `WRITESPACE`
-label, and no `QUIT` is at the end of the `WRITEHELLO` label. Therefore, the
-routine will start executing the `WRITESPACE` label, and write a space to the
-console. The same logic holds for the `WRITEWORLD` label. However, after
-writing `WORLD` to the screen, the routine encounters a `QUIT`, and it will
-quit, and continue the executing after the call to `WRITEHELLO`. The next line
-is again a `QUIT`, and this will stop the execution of the routine.
+When calling this routine, the execution order is:
+
+1. The routine will start by calling the `WRITEHELLO` label.
+1. In the `HELLOWORLD` label, the world `HELLO` is written to the console.
+1. The next line start the `WRITESPACE` label, and no `QUIT` is at the end of
+   the `WRITEHELLO` label. Therefore, the routine will start executing the
+   `WRITESPACE` label.
+1. In the `WRITESPACE` label a space is written to the console.
+1. No `QUIT` at the end of `WRITESPACE` results in executing the `WRITEWORLD`
+   label.
+1. In the `WRITEWORLD` label, the word `WORLD` is written to the console. After
+   writing `WORLD` to the screen, the routine encounters a `QUIT`, and it will
+   quit, and continue the executing after the call to `WRITEHELLO`.
+1. The last line of the top level of the routine is a `QUIT`, and will stop the
+   execution of the routine.
 
 Because of the `QUIT` in `WRITEWORLD`, the line
 `THIS IS SOMETHING, SHOULD NOT BE WRITTEN TO CONSOLE` will not be written to
@@ -155,3 +188,7 @@ the console.
 
 Also, if one would call the `WRITESPACE` label, the resulting line that is
 written to the console is ` WORLD`.
+
+## Object Files
+
+When taking a closer look at the `gtmroutines` variable,
