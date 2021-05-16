@@ -1,2 +1,0 @@
-	WRITE "HELLO WORLD, WE ARE NOW IN <dir>",!
-	QUIT
