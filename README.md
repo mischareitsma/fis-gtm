@@ -1,51 +1,25 @@
 # FIS GT.M
 
-GT.M, an abreviation for Greenwitch Technology M, is a key-value database
+GT.M, an abbreviation of Greenwitch Technology M, is a key-value database
 optimized for high performance transaction processing. The data structure
 follows the schema-less tree structure.
 
 Additionally, GT.M is a development platform and compiler for Mumps.
 
-For more information on FIS GT.M, check the 
-[Wikipedia](https://en.wikipedia.org/wiki/GT.M) entry or at
-[FIS](https://www.fisglobal.com/solutions/Banking%20and%20Wealth/Services/Database%20Engine).
+For more information on FIS GT.M, check the [Wikipedia][wiki-gtm] entry.
 
+## GT.M Docker Images
 
-## Running GT.M
+In order to run GT.M in docker, download [docker]. The images are published
+on docker.io as `mreitsma/fis-gtm`. The entry point for the containers sets up
+the environment to be able to run `mumps` directly.
 
-In order to run GT.M, there are three possible solutions:
-
-1. Docker
-1. Vagrant
-1. Local installation
-
-### Docker
-
-In order to run GT.M in docker, download
-[docker](https://www.docker.com/get-docker).
-
-The image `mreitsma/fis-gtm`, found on docker.io, can be used. The entrypoint
-of the containers set the environment up to use Mumps directly.
-
-Additionally, the image can be build from scratch by running `docker build`
-using the `Dockerfile` that can be found [here](docker/centos/Dockerfile) based
-on Cent OS 7, or [here](docker/alpine/Dockerfile) based on alpine. **TODO: The
-alpine image is still under construction and cannot be used!**
-
-### Vagrant
-
-In order to run GT.M in Vagrant, download
-[Vagrant](https://www.vagrantup.com/downloads.html).
-
-The box `mreitsma/fis-gtm` found on the Vagrant cloud can be used to run GT.M.
-**TODO: Still need to create the box, using Packer, cannot use the box at the
-moment!**
-
-Additionally, a box can be build from scratch, based on a base CentOS 7 box,
-using the Vagrantfile found [here](vagrant/Vagrantfile).
-
-### Install locally
+## Install locally
 
 GT.M can be installed locally on various platforms. To install, download the
-latest version from [sourceforce](https://sourceforge.net/projects/fis-gtm/),
-and execute the `gtminstall` script.
+latest version from [sourceforge], and execute the `gtminstall` script or run
+`configure`.
+
+[wiki-gtm]: https://en.wikipedia.org/wiki/GT.M
+[docker]: https://www.docker.com/get-docker
+[sourceforge]: https://sourceforge.net/projects/fis-gtm/
